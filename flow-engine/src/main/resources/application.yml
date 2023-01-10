@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: flow-engine
+  datasource:
+    name: flow-engine
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/workflow?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+    username: root
+    password: 123456
+
+dubbo:
+  protocol:
+    name: dubbo
+    port: -1
+  protocols:
+    dubbo:
+      name: dubbo
+      port: -1
+#    rest:
+#      port: -1
+#      server: jetty
+#      name: rest
+  registries:
+#    dubbo-zk:
+#      address: zookeeper://127.0.0.1:2181
+    dubbo-nacos:
+      address: nacos://127.0.0.1:8849?namespace=11ffe620-3227-4226-8809-301b60ef8137
+seata:
+  registry:
+    type: "nacos"
+    nacos:
+      ## 需要与seata server中registry.nacos.application保持一致
+      application: flow-engine
+      server-addr: 127.0.0.1:8849
+      group: SEATA_GROUP
+      namespace: 7ee25866-e691-4732-8f25-b02cb7355e26
+      username: nacos
+      password: nacos
+  config:
+    nacos:
+      ##连接的是seata的地址
+      server-addr: 127.0.0.1:8849
+      username: nacos
+      password: nacos
+      namespace: 7ee25866-e691-4732-8f25-b02cb7355e26
+      data-id: seata.properties
+    #      dataId : "flow_seata_group"
+    type: nacos
+  enabled: true
+  tx-service-group: default_tx_group
+  service:
+    vgroup_mapping:
+      default_tx_group: default
+    grouplist:
+      default: 127.0.0.1:8091
+    enable-degrade: false
+    disable-global-transaction: false
+  transport:
+    shutdown:
+      wait: 3
+    thread-factory:
+      boss-thread-prefix: NettyBoss
+      worker-thread-prefix: NettyServerNIOWorker
+      server-executor-thread-prefix: NettyServerBizHandler
+      share-boss-worker: false
+      client-selector-thread-prefix: NettyClientSelector
+      client-selector-thread-size: 1
+      client-worker-thread-prefix: NettyClientWorkerThread
+      worker-thread-size: default
+      boss-thread-size: 1
+    type: TCP
+    server: NIO
+    heartbeat: true
+    serialization: seata
+    compressor: none
+    enable-tm-client-batch-send-request: false
+    enable-rm-client-batch-send-request: true
+
+nacos:
+  discovery:
+    server-addr: 127.0.0.1:8849
+    namespace: e1747816-1238-42be-8731-84070de0793b
+    username: "nacos"
+    password: "nacos"
+  config:
+    server-addr: 127.0.0.1:8849
+    namespace: e1747816-1238-42be-8731-84070de0793b
+    username: "nacos"
+    password: "nacos"
